@@ -15,7 +15,7 @@ npm install --save rdf-store-acl
 The object constructor is the following:
 
 ```Javascript
-new AclStore(store, [accessControl, options])
+new AclStore(store, [options, accessControl])
 ```
 
 The `accessControl` is by default, is set to be a [`solid-acl`](http://npm.im/solid-acl) object, however, you can pass a different ACL lib.
