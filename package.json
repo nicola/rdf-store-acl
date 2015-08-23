@@ -26,7 +26,6 @@
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "rdf-store-multi": "^0.1.2",
     "solid-acl": "^0.1.0"
   }
 }
