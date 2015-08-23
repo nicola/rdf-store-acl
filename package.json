@@ -1,6 +1,6 @@
 {
   "name": "rdf-store-acl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add ACL support to your store",
   "main": "index.js",
   "scripts": {
