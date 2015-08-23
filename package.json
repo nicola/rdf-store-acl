@@ -1,7 +1,7 @@
 {
   "name": "rdf-store-acl",
   "version": "0.1.0",
-  "description": "Add solid-acl support to your store",
+  "description": "Add ACL support to your store",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha ./test"

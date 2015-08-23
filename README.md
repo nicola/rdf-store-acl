@@ -1,6 +1,6 @@
 # rdf-store-acl
 
-RDF Store that uses a local store or a remote store depending on the IRI.
+Add ACL support to your store. 
 It follows the [RDF-ext Interface](http://bergos.github.io/rdf-ext-spec/) specification.
 
 
@@ -12,9 +12,17 @@ npm install --save rdf-store-acl
 
 ## Usage
 
-You will have to specify a `local` and a `remote` store in the `options`.
-If the `host` (see the example) matches the `IRI` of the request,
-it means that the file can be accessed by the `local` store, the `remote` will be used otherwise
+The object constructor is the following:
+
+```Javascript
+new AclStore(store, [accessControl, options])
+```
+
+The `accessControl` is by default, is set to be a [`solid-acl`](http://npm.im/solid-acl) object, however, you can pass a different ACL lib.
+
+The `options` are passed to the ACL object, for this, see [`solid-acl`](http://npm.im/solid-acl) or any other ACL implementations you are using
+
+## Example
 
 ```javascript
 var rdf = require('rdf-ext')
