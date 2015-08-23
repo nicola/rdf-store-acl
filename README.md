@@ -36,16 +36,20 @@ var server = ServerStore({
   remote: new AclStore(new FileStore(rdf))
 })
 
-var host = req.protocol + '://' + req.host
-var options = {user: userWebID, origin: req.origin}
-store(host).graph(host + req.originalUrl, function (graph, err) {
-  // This will run on the local store (FileStore)
-  // err is an Error object if the user can't access
-}, options)
+// ...
 
-store(host).graph('http://other.tld/resource.tld', function (graph, err) {
-  // This will run on the remote store (LdpStore)
-}, options)
+var options = {user: userWebID, origin: requestOrigin}
+store('http://localhost:8080')
+  .graph('http://localhost:8080, function (graph, err) {
+    // This will run on the local store (FileStore)
+    // err is an Error object if the user can't access
+  }, options)
+
+store(host)
+  .graph('http://other.tld/resource.tld', function (graph, err) {
+    // This will run on the remote store (LdpStore)
+    // ACL will use LDPStore to figure out permissions
+  }, options)
 
 ```
 
