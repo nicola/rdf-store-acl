@@ -21,7 +21,7 @@ function AclStore (store, opts, accessControl) {
     options = options || {}
     accessControl.allow(options.user, 'Read', iri, function (err) {
       if (err) return callback(null, err)
-      store.match(iri, subject, predicate, object, callback, limit)
+      store.match(iri, subject, predicate, object, callback, limit, options)
     }, options)
   }
 
@@ -45,7 +45,7 @@ function AclStore (store, opts, accessControl) {
     options = options || {}
     accessControl.allow(options.user, 'Write', iri, function (err) {
       if (err) return callback(null, err)
-      store.remove(iri, graph, callback)
+      store.remove(iri, graph, callback, options)
     }, options)
   }
 
@@ -53,7 +53,7 @@ function AclStore (store, opts, accessControl) {
     options = options || {}
     accessControl.allow(options.user, 'Write', iri, function (err) {
       if (err) return callback(null, err)
-      store.removeMatches(iri, subject, predicate, object, callback)
+      store.removeMatches(iri, subject, predicate, object, callback, options)
     }, options)
   }
 
@@ -61,7 +61,7 @@ function AclStore (store, opts, accessControl) {
     options = options || {}
     accessControl.allow(options.user, 'Write', iri, function (err) {
       if (err) return callback(null, err)
-      store.delete(iri, callback)
+      store.delete(iri, callback, options)
     }, options)
   }
 }
