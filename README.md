@@ -31,15 +31,15 @@ var FileStore = require('rdf-store-fs')
 var ServerStore = require('rdf-store-server')
 var AclStore = require('rdf-store-acl')
 
-var server = ServerStore({
+var server = new ServerStore({
   local: new AclStore(new LdpStore(rdf)),
   remote: new AclStore(new FileStore(rdf))
 })
 
 // ...
 
-var options = {user: userWebID, origin: requestOrigin}
-store('http://localhost:8080')
+var options = {agent: userWebID, application: requestOrigin, host: host}
+store
   .graph('http://localhost:8080, function (graph, err) {
     // This will run on the local store (FileStore)
     // err is an Error object if the user can't access
