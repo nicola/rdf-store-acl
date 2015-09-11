@@ -7,7 +7,14 @@ function AclStore (store, opts, accessControl) {
 
   opts = opts || {}
   self.store = store
-  self.accessControl = opts.accessControl || new ACL(store, opts)
+
+  if (!opts.accessControl) {
+    opts.suffix = opts.suffixAcl
+    opts.store = self.store
+    opts.accessControl = new ACL(opts)
+  }
+
+  self.accessControl = opts.accessControl
 
   self.graph = function (iri, callback, options) {
     options = options || {}
