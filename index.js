@@ -1,8 +1,12 @@
-'use strict'
+module.exports = AclStore
 
 var ACL = require('solid-acl')
+var AbstractStore = require('rdf-store-abstract')
+var util = require('util')
 
 function AclStore (store, opts, accessControl) {
+  AbstractStore.call(this, opts)
+
   var self = this
 
   opts = opts || {}
@@ -14,63 +18,76 @@ function AclStore (store, opts, accessControl) {
     opts.accessControl = new ACL(opts)
   }
 
-  self.accessControl = opts.accessControl
+  self.accessControl = opts.accessControl || accessControl
+}
+util.inherits(AclStore, AbstractStore)
 
-  self.graph = function (iri, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Read', iri, function (err) {
-      if (err) return callback(null, err)
-      store.graph(iri, callback, options)
-    }, options)
-  }
+AclStore.prototype.graph = function (iri, callback, options) {
+  options = options || {}
+  var self = this
 
-  self.match = function (iri, subject, predicate, object, callback, limit, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Read', iri, function (err) {
-      if (err) return callback(null, err)
-      store.match(iri, subject, predicate, object, callback, limit, options)
-    }, options)
-  }
-
-  self.add = function (iri, graph, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Append', iri, function (err) {
-      if (err) return callback(null, err)
-      store.add(iri, graph, callback, options)
-    }, options)
-  }
-
-  self.merge = function (iri, graph, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Append', iri, function (err) {
-      if (err) return callback(null, err)
-      store.merge(iri, graph, callback, options)
-    }, options)
-  }
-
-  self.remove = function (iri, graph, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Write', iri, function (err) {
-      if (err) return callback(null, err)
-      store.remove(iri, graph, callback, options)
-    }, options)
-  }
-
-  self.removeMatches = function (iri, subject, predicate, object, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Write', iri, function (err) {
-      if (err) return callback(null, err)
-      store.removeMatches(iri, subject, predicate, object, callback, options)
-    }, options)
-  }
-
-  self.delete = function (iri, callback, options) {
-    options = options || {}
-    accessControl.allow(options.user, 'Write', iri, function (err) {
-      if (err) return callback(null, err)
-      store.delete(iri, callback, options)
-    }, options)
-  }
+  self.accessControl.allow(options.user, 'Read', iri, function (err) {
+    if (err) return callback(err)
+    self.store.graph(iri, callback, options)
+  }, options)
 }
 
-module.exports = AclStore
+AclStore.prototype.match = function (iri, subject, predicate, object, callback, limit, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Read', iri, function (err) {
+    if (err) return callback(err)
+    self.store.match(iri, subject, predicate, object, callback, limit, options)
+  }, options)
+}
+
+AclStore.prototype.add = function (iri, graph, callback, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Append', iri, function (err) {
+    if (err) return callback(err)
+    self.store.add(iri, graph, callback, options)
+  }, options)
+}
+
+AclStore.prototype.merge = function (iri, graph, callback, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Append', iri, function (err) {
+    if (err) return callback(err)
+    self.store.merge(iri, graph, callback, options)
+  }, options)
+}
+
+AclStore.prototype.remove = function (iri, graph, callback, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Write', iri, function (err) {
+    if (err) return callback(err)
+    self.store.remove(iri, graph, callback, options)
+  }, options)
+}
+
+AclStore.prototype.removeMatches = function (iri, subject, predicate, object, callback, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Write', iri, function (err) {
+    if (err) return callback(err)
+    self.store.removeMatches(iri, subject, predicate, object, callback, options)
+  }, options)
+}
+
+AclStore.prototype.delete = function (iri, callback, options) {
+  options = options || {}
+  var self = this
+
+  self.accessControl.allow(options.user, 'Write', iri, function (err) {
+    if (err) return callback(err)
+    self.store.delete(iri, callback, options)
+  }, options)
+}
