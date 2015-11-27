@@ -26,68 +26,107 @@ AclStore.prototype.graph = function (iri, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Read', iri, function (err) {
-    if (err) return callback(err)
-    self.store.graph(iri, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+
+    self.accessControl.allow(options.user, 'Read', iri, function (err) {
+      if (err) return callback(err)
+      self.store.graph(iri, callback, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.match = function (iri, subject, predicate, object, callback, limit, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Read', iri, function (err) {
-    if (err) return callback(err)
-    self.store.match(iri, subject, predicate, object, callback, limit, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Read', iri, function (err) {
+      if (err) return callback(err)
+      self.store.match(iri, subject, predicate, object, callback, limit, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.add = function (iri, graph, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Append', iri, function (err) {
-    if (err) return callback(err)
-    self.store.add(iri, graph, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Append', iri, function (err) {
+      if (err) return callback(err)
+      self.store.add(iri, graph, callback, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.merge = function (iri, graph, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Append', iri, function (err) {
-    if (err) return callback(err)
-    self.store.merge(iri, graph, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Append', iri, function (err) {
+      if (err) return callback(err)
+      self.store.merge(iri, graph, callback, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.remove = function (iri, graph, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Write', iri, function (err) {
-    if (err) return callback(err)
-    self.store.remove(iri, graph, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Write', iri, function (err) {
+      if (err) return callback(err)
+      self.store.remove(iri, graph, callback, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.removeMatches = function (iri, subject, predicate, object, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Write', iri, function (err) {
-    if (err) return callback(err)
-    self.store.removeMatches(iri, subject, predicate, object, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Write', iri, function (err) {
+      if (err) return callback(err)
+      self.store.removeMatches(iri, subject, predicate, object, callback, options)
+    }, options)
+  })
 }
 
 AclStore.prototype.delete = function (iri, callback, options) {
   options = options || {}
   var self = this
 
-  self.accessControl.allow(options.user, 'Write', iri, function (err) {
-    if (err) return callback(err)
-    self.store.delete(iri, callback, options)
-  }, options)
+  return new Promise(function (resolve, reject) {
+    callback = combinedCallback(resolve, reject, callback)
+    self.accessControl.allow(options.user, 'Write', iri, function (err) {
+      if (err) return callback(err)
+      self.store.delete(iri, callback, options)
+    }, options)
+  })
+}
+
+function combinedCallback (resolve, reject, callback) {
+
+  return function (error, result) {
+    if (!error) {
+      if (callback) {
+        callback(null, result)
+      }
+      resolve(result)
+    } else {
+      if (callback) {
+        callback(error)
+      }
+      reject(error)
+    }
+  }
 }
