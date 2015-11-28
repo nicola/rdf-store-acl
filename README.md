@@ -1,6 +1,8 @@
 # rdf-store-acl
+[![](https://img.shields.io/badge/project-Solid-7C4DFF.svg?style=flat-square)](https://github.com/solid/solid)
 
-Add ACL support to your store. 
+> Add ACL support to your store.
+
 It follows the [RDF-ext Interface](http://bergos.github.io/rdf-ext-spec/) specification.
 
 
